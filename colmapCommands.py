@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
+import subprocess
 
 
 def browse_image_path():
@@ -51,7 +52,7 @@ def run_colmap_operations():
     exhaustive_matcher_command = f"colmap exhaustive_matcher --database_path {db_path}"
     mapper_command = f"colmap mapper --database_path {db_path} --image_path {path1} --output_path {model1_path}"
     bundle_adjuster_command = f"colmap bundle_adjuster --input_path {model1_path}/0 --output_path {model2_path}"
-    model_converter_command = f"colmap model_converter --input_path {model2_path}/0 --output_path colmap_text --output_type TXT"
+    model_converter_command = f"colmap model_converter --input_path {model2_path} --output_path colmap_text --output_type TXT"
     nerf_converter_command = f"python scripts/colmap2nerf.py --colmap_matcher exhaustive --aabb_scale 16 --images {path1}"
 
     # Clear the text widget and insert the commands
@@ -63,6 +64,7 @@ def run_colmap_operations():
     #text_widget.insert(tk.END, f"{bundle_adjuster_command}\n\n")
     #text_widget.insert(tk.END, f"{model_converter_command}\n\n")
     #text_widget.insert(tk.END, f"{nerf_converter_command}\n\n")
+    #command_to_run = f"conda activate instant-ngp && cd {base_dir} && {feature_extractor_command} && {exhaustive_matcher_command} && {mapper_command} && {bundle_adjuster_command} && {model_converter_command} && {nerf_converter_command}"
 
 # Create a Tkinter window
 root = tk.Tk()
