@@ -1,0 +1,46 @@
+const fs = require("fs");
+const http = require("http");
+const path = require("path");
+
+const host = 'localhost';
+const PORT = 3000;
+
+const server = http.createServer(handler);
+server.listen(PORT, () => console.log("listening..."))
+
+function handler(req, res) {
+    let file_path = req.url;
+    console.log(file_path, req.url)
+    if (file_path === "/") {
+        file_path += "index.html";
+    }
+    const content_type = getContentType(file_path);
+    console.log(content_type);
+    res.writeHeader(200, {"Content-Type": content_type});
+    const file_content = fs.readFileSync(`./client${file_path}`, { encoding: "utf8", flag: "r" });
+    res.write(file_content);
+    res.end();
+}
+
+function getContentType(file_path) {
+    const extension = path.extname(file_path);
+    let type = "";
+    switch (extension) {
+        case ".html":
+            type = "text/html";
+            break;
+        case ".js":
+            type = "text/javascript";
+            break;
+        case ".css":
+            type = "text/css";
+            break;
+        case ".svg":
+            type = "image/svg+xml";
+            break;
+        default:
+            type = "application/json";
+            break;
+    }
+    return type;
+}
