@@ -1,11 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
+import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
 
 // 3D construct for testing
-const MESH_PATH = "birdBushMesh/mesh.obj";
-const MAT_PATH = "birdBushMesh/mesh.mtl";
+const MESH_PATH = "mesh.ply";
+// const MAT_PATH = "birdBushMesh/mesh.mtl";
 
 const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector("#display")
@@ -21,20 +20,18 @@ camera.position.setZ(5);
 // Camera movement controls
 const controls = new OrbitControls(camera, renderer.domElement);
 
-const point_light = new THREE.PointLight(0xffffff, 100);
+const point_light = new THREE.PointLight(0xffffff, 1000);
 const ambient_light = new THREE.AmbientLight(0xffffff, 0.5);
 point_light.position.set(5, 5, 5);
-scene.add(point_light, ambient_light);
+// scene.add(point_light, ambient_light);
 
 // Load 3D construct file
-const mat_loader = new MTLLoader();
-const geo_loader = new OBJLoader();
-mat_loader.load(MAT_PATH, (material) => {
-    material.preload();
-    geo_loader.setMaterials(material);
-    geo_loader.load(MESH_PATH, (mesh) => {
-        scene.add(mesh);
-    });
+const loader = new PLYLoader();
+loader.load(MESH_PATH, (geo) => {
+    // geo.addAttribute("color", new THREE.BufferAttribute(colors, 3, true));
+    const mat = new THREE.PointsMaterial({size: 0.01, vertexColors: false});
+    const mesh = new THREE.Points(geo, mat);
+    scene.add(mesh);
 });
 
 // Update loop
