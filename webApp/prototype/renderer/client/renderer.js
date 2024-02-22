@@ -3,8 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
 
 // 3D construct for testing
-const MESH_PATH = "mesh.ply";
-// const MAT_PATH = "birdBushMesh/mesh.mtl";
+const MESH_PATH = "goat_skull_ply_1/Goat skull.ply";
 
 const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector("#display")
@@ -28,8 +27,7 @@ point_light.position.set(5, 5, 5);
 // Load 3D construct file
 const loader = new PLYLoader();
 loader.load(MESH_PATH, (geo) => {
-    // geo.addAttribute("color", new THREE.BufferAttribute(colors, 3, true));
-    const mat = new THREE.PointsMaterial({size: 0.01, vertexColors: false});
+    const mat = new THREE.PointsMaterial({size: 0.1, vertexColors: true});
     const mesh = new THREE.Points(geo, mat);
     scene.add(mesh);
 });
