@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Construction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #add8e6;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .centered-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .model-preview {
+            width: 500px;
+            height: 500px;
+            background-color: #808080;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            max-width: 500px; 
+            position: relative; 
+        }
+        button {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .export-btn {
+            background-color: #007bff;
+            color: #fff;
+            margin: 0 auto;
+        }
+        .back-btn {
+            background-color: #666;
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 14px;
+            position: absolute;
+            left: -2cm; 
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <h1>3D CONSTRUCTION</h1>
+    <p class="subtitle">Upload Files | Model Preview</p>
+    <div class="centered-content">
+        <div class="model-preview">
+
+        </div>
+        <div class="buttons">
+            <button class="back-btn">Back</button>
+            <button class="export-btn">Export Model</button>
+        </div>
+    </div>
+</body>
+</html>
