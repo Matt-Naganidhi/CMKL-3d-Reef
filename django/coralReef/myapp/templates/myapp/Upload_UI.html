@@ -76,6 +76,15 @@
             font-size: 0.85em;
             color: #666;
         }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #28a745; /* Success color */
+        }
+        .error-message {
+            color: #dc3545; /* Error color */
+        }
     </style>
 </head>
 <body>
@@ -91,6 +100,13 @@
                 <button type="submit">Upload</button>
             </div>
         </form>
+        <!-- Success or Error message display -->
+        {% if success_message %}
+        <div class="message">{{ success_message }}</div>
+        {% endif %}
+        {% if error_message %}
+        <div class="message error-message">{{ error_message }}</div>
+        {% endif %}
         <div id="preview"></div>
     </div>
     <div class="application-info">
