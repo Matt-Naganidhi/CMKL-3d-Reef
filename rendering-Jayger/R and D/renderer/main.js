@@ -18,6 +18,11 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+//Initialize OrbitControls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; // An optional setting that gives a smoother camera control experience
+controls.dampingFactor = 0.05;
+
 //Lighting
 const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
 scene.add(ambientLight);
@@ -45,11 +50,7 @@ const animate = function ()
 {
   requestAnimationFrame(animate);
 
-//Allows the ability to rotate the corals
-  coral.rotation.x += 0.01;
-  coral.rotation.y += 0.01;
-  coral2.rotation.x += 0.01;
-  coral2.rotation.y += 0.01;
+  controls.update();
   renderer.render(scene, camera);
 };
 
