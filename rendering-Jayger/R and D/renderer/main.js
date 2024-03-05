@@ -24,11 +24,11 @@ controls.enableDamping = true; // An optional setting that gives a smoother came
 controls.dampingFactor = 0.05;
 
 //Lighting
-const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(1, 1, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1000);
+directionalLight.position.set(5, 5, 5);
 scene.add(directionalLight);
 
 //Creating the corals by using geometries
@@ -45,11 +45,11 @@ const coral2 = new THREE.Mesh(geometry2, coralMaterial);
 coral2.position.x = 2;
 scene.add(coral2);
 
+
 //Renderers the scene
 const animate = function () 
 {
   requestAnimationFrame(animate);
-
   controls.update();
   renderer.render(scene, camera);
 };
