@@ -1,43 +1,49 @@
-from django.http import JsonResponse, HttpResponse
-from django.conf import settings
+from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import render
+from django.conf import settings
 import os
-from .models import TrainingJob  # Ensure the TrainingJob model is imported correctly
+from .models import TrainingJob
 
 def generate_job_id():
-    # Placeholder for your job ID generation logic
-    # This could be a simple counter, a UUID, or any other unique identifier strategy
     import uuid
     return uuid.uuid4().hex
 
 def upload_file(request):
-    # Check if the request is a POST and contains a file
-    if request.method == 'POST' and request.FILES.get('file'):
-        uploaded_file = request.FILES['file']  # Access the uploaded file
-        upload_directory = os.path.join(settings.MEDIA_ROOT, 'uploaded_files')  # Set the upload directory path
-
-        try:
-            os.makedirs(upload_directory, exist_ok=True)  # Ensure the upload directory exists
-            file_path = os.path.join(upload_directory, uploaded_file.name)  # Define the full file path
-
-            # Save the uploaded file to the specified directory
-            with open(file_path, 'wb+') as destination:
-                for chunk in uploaded_file.chunks():
-                    destination.write(chunk)
-
-            # Create a TrainingJob instance after the file is saved
-            job = TrainingJob.objects.create(
-                job_id=generate_job_id(),  # Generate a unique ID for the job
-                file_path=uploaded_file.name,  # Store the filename or adjust as needed
-                success_status=False  # Set initial processing status to False
-            )
-
-            # Return a JSON response indicating success and include the job ID
-            return JsonResponse({'message': 'File uploaded successfully', 'job_id': job.job_id})
-        except Exception as e:
-            # If saving the file or creating a TrainingJob instance fails, return an error response
-            return JsonResponse({'error': 'Failed to upload file', 'details': str(e)}, status=500)
+    if request.method == 'GET':
+        # If the request is a GET, simply render the upload form.
+        # This is where you display the page initially.
+        return render(request, 'myapp/Upload_UI.html')
+    elif request.method == 'POST':
+        # Handle file uploads for POST requests
+        files = request.FILES.getlist('file')  # Get a list of uploaded files
+        responses = []  # To store responses for each file
+        
+        for uploaded_file in files:
+            try:
+                upload_directory = os.path.join(settings.MEDIA_ROOT, 'uploaded_files')
+                os.makedirs(upload_directory, exist_ok=True)  # Ensure the directory exists
+                file_path = os.path.join(upload_directory, uploaded_file.name)
+                
+                # Save each uploaded file
+                with open(file_path, 'wb+') as destination:
+                    for chunk in uploaded_file.chunks():
+                        destination.write(chunk)
+                
+                # Optionally create a TrainingJob instance for each file
+                job = TrainingJob.objects.create(
+                    job_id=generate_job_id(),
+                    file_path=uploaded_file.name,
+                    success_status=False  # You might update this based on further processing
+                )
+                
+                # Add a success message for this file
+                responses.append({'message': 'File uploaded successfully', 'job_id': job.job_id, 'file_name': uploaded_file.name})
+            except Exception as e:
+                # If there's an error, add that information for this file
+                responses.append({'error': 'Failed to upload file', 'details': str(e), 'file_name': uploaded_file.name})
+        
+        # After processing all files, return a JSON response with the outcomes
+        return JsonResponse({'files': responses})
     else:
-        # If the request is not a POST with a file, render the upload form
-        return render(request, 'upload_form.html')
-
+        # If the method is neither GET nor POST, return a 405 Method Not Allowed error
+        return HttpResponseNotAllowed(['GET', 'POST'])
