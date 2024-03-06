@@ -1,78 +1,84 @@
-body {
+body 
+{
     font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #add8e6;
+    margin: 0; 
+    background-color: #add8e6; 
     color: #333;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    height: 100%; 
+    padding: 20px; 
 }
-
-h1 {
+h1, .subtitle 
+{
     text-align: center;
-    font-size: 32px;
     margin-top: 20px;
-    margin-bottom: 10px;
 }
-
-.subtitle {
-    text-align: center;
-    font-size: 18px;
+.subtitle 
+{
+    font-size: 18px; 
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 20px; 
 }
-
-.centered-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+.functions 
+{
+    margin-top: 20px;
 }
-
-.model-preview {
-    width: 500px;
-    height: 500px;
-    background-color: #808080;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
+.upload-files 
+{
+    background-color: #fff; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-.buttons {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    max-width: 500px; 
-    position: relative; 
+.upload-files h2 
+{
+    margin-top: 0;
 }
-
-button {
+span 
+{
+    display: block;
+    border: 2px dashed #aaa;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: #eee;
+}
+button 
+{
+    background-color: #007bff;
+    color: #fff;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
 }
-
-.export-btn {
-    background-color: #007bff;
-    color: #fff;
-    margin: 0 auto;
+button:hover 
+{
+    background-color: #0056b3;
 }
-
-.back-btn {
-    background-color: #666;
-    color: #fff;
-    padding: 8px 16px;
-    font-size: 14px;
-    position: absolute;
-    left: -2cm; 
+#preview 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
 }
-
-button:hover {
-    opacity: 0.8;
+#preview img, #preview video 
+{
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+.application-info 
+{
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.85em;
+    color: #666;
+}
+.hide
+{
+    display: none;
 }
