@@ -5,12 +5,12 @@ const selectButton = dropArea.querySelector("button");
 const uploadButton = document.querySelector("#submit");
 const input = dropArea.querySelector("input");
 
-selectButton.addEventListener("click", e => 
+selectButton.addEventListener("click", () => 
 {
     input.click();
 });
 
-uploadButton.addEventListener("click", e =>
+uploadButton.addEventListener("click", () =>
 {
     const endpoint = "https://httpbin.org/post"
     const formData = new FormData();
