@@ -1,0 +1,36 @@
+
+.upload-files {
+    background-color: #fff; 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.upload-files h2 {
+    margin-top: 0;
+}
+
+.application-info {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 0.85em;
+    color: #666;
+}
+
+#drop-area {
+    display: block;
+    border: 2px dashed #aaa;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: #eee;
+}
+
+#preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}

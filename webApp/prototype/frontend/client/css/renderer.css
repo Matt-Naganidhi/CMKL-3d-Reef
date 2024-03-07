@@ -1,0 +1,20 @@
+canvas {
+    width: 1000px;
+    height: 800px;
+    background-color: #808080;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* .export-btn {
+    margin: 0 auto;
+} */
+
+.back-btn {
+    background-color: #666;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 14px;
+}
