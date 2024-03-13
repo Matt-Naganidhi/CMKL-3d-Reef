@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.conf import settings
 import os
 from .models import TrainingJob
@@ -8,9 +9,36 @@ def generate_job_id():
     return uuid.uuid4().hex
 
 def upload_file(request):
-    # Initialize an empty success message
     success_message = None
     error_message = None
+
+    if request.method == 'POST':
+        uploaded_file = request.FILES.get('file')  # Assuming the input name is 'file'
+        if uploaded_file:
+            try:
+                # Save the file to 'uploaded_files' folder within MEDIA_ROOT
+                save_path = os.path.join(settings.MEDIA_ROOT, 'uploaded_files', uploaded_file.name)
+                with open(save_path, 'wb+') as destination:
+                    for chunk in uploaded_file.chunks():
+                        destination.write(chunk)
+                success_message = "File uploaded successfully."
+            except Exception as e:
+                error_message = "Failed to upload file. Error: {}".format(e)
+        else:
+            error_message = "No file was uploaded."
+
+    # Always return to the same page, now with success or error messages if they exist
+    return render(request, 'myapp/Upload_UI.html', {
+        'success_message': success_message,
+        'error_message': error_message,
+    })
+
+def model_preview(request):
+    # Any context data you want to pass to the template can go here
+    context = {}
+    return render(request, 'myapp/view.html', context)
+
+
 
     if request.method == 'POST':
         # Access the uploaded files from the form

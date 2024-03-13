@@ -22,6 +22,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 // const ambient_light = new THREE.AmbientLight(0xffffff, 0.5);
 // point_light.position.set(5, 5, 5);
 // scene.add(point_light, ambient_light);
+
 // Load 3D construct file
 export function loadPLY(filePath) {
     const loader = new PLYLoader();

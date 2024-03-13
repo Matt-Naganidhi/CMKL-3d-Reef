@@ -1,0 +1,127 @@
+
+
+<!--WORKING VERSION 1-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Construction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #add8e6;
+            color: #333;
+            height: 100%;
+            padding: 20px;
+        }
+        h1, .subtitle {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .functions {
+            margin-top: 20px;
+        }
+        .upload-files {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .upload-files h2 {
+            margin-top: 0;
+        }
+        #file-input {
+            display: none;
+        }
+        label {
+            display: block;
+            border: 2px dashed #aaa;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 10px;
+            background-color: #eee;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        #preview img, #preview video {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+        .application-info {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.85em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>3D CONSTRUCTION</h1>
+    <p class="subtitle">Upload Files | Video Preview | Model Preview</p>
+    <div class="functions">
+        <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="upload-files">
+                <h2>Upload Files</h2>
+                <input type="file" id="file-input" name="file" accept="image/*, video/*" multiple>
+                <label for="file-input">Drag & Drop to upload files or <button type="button" onclick="document.getElementById('file-input').click();">Select to upload files</button></label>
+                <button type="submit">Upload</button>
+            </div>
+        </form>
+        <div id="preview"></div>
+    </div>
+    <div class="application-info">
+        <p>©2023 by 3D Construction. Proudly created with Wix.com</p>
+    </div>
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const preview = document.getElementById('preview');
+
+        fileInput.addEventListener('change', function(e) {
+            const files = e.target.files;
+            preview.innerHTML = '';
+
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => URL.revokeObjectURL(img.src); // Free memory
+                    preview.appendChild(img);
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = URL.createObjectURL(file);
+                    video.controls = true;
+                    video.onload = () => URL.revokeObjectURL(video.src); // Free memory
+                    preview.appendChild(video);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
