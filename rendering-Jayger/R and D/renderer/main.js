@@ -2,56 +2,78 @@ import './style.css'
 import * as THREE from 'three';
 
 //Code by Jayger Kunakorn
-
-//Always need 3 objects: Scene, Camera, Renderer
-
-//Setting up the 3D scene
+// Scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0000ff); // Set background to blue
 
-//Camera
+// Camera
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 5;
+camera.position.set(0, 5, 10);
+camera.lookAt(0, 0, 0);
 
-//Renderer
+// Renderer
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-//Initialize OrbitControls
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; // An optional setting that gives a smoother camera control experience
-controls.dampingFactor = 0.05;
+// Water
+const waterGeometry = new THREE.PlaneBufferGeometry(100, 100);
+const water = new THREE.Water(
+    waterGeometry,
+    {
+        textureWidth: 512,
+        textureHeight: 512,
+        waterNormals: new THREE.TextureLoader().load('https://unpkg.com/three/examples/textures/waternormals.jpg', function (texture) {
+            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        }),
+        alpha: 1.0,
+        sunDirection: new THREE.Vector3(),
+        sunColor: 0xffffff,
+        waterColor: 0x001e0f,
+        distortionScale: 3.7,
+        fog: scene.fog !== undefined
+    }
+);
+water.rotation.x = -Math.PI / 2;
+scene.add(water);
 
-//Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
+// Lights
+const ambientLight = new THREE.AmbientLight(0xcccccc, 0.4);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1000);
-directionalLight.position.set(5, 5, 5);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+directionalLight.position.set(-1, 1, 1);
 scene.add(directionalLight);
 
-//Creating the corals by using geometries
-const coralMaterial = new THREE.MeshPhongMaterial({ color: 0xff6347, flatShading: true });
+// Corals (Simple geometries for example)
+const coralMaterial = new THREE.MeshLambertMaterial({color: 0xff0000});
+for (let i = 0; i < 10; i++) {
+    const geometry = new THREE.ConeGeometry(0.5, 1, 32);
+    const coral = new THREE.Mesh(geometry, coralMaterial);
+    coral.position.set(Math.random() * 20 - 10, -2, Math.random() * 20 - 10);
+    scene.add(coral);
+}
 
-//Coral
-const geometry1 = new THREE.CylinderGeometry(0.5, 0.5, 3, 8);
-const coral = new THREE.Mesh(geometry1, coralMaterial);
-coral.position.x = -2;
-scene.add(coral);
+// Fishes (Simple geometries for example)
+const fishMaterial = new THREE.MeshLambertMaterial({color: 0xffff00});
+for (let i = 0; i < 10; i++) {
+    const geometry = new THREE.SphereGeometry(0.25, 32, 16);
+    const fish = new THREE.Mesh(geometry, fishMaterial);
+    fish.position.set(Math.random() * 20 - 10, Math.random() * 5 - 2.5, Math.random() * 20 - 10);
+    scene.add(fish);
+}
 
-const geometry2 = new THREE.BoxGeometry(1, 1, 1);
-const coral2 = new THREE.Mesh(geometry2, coralMaterial);
-coral2.position.x = 2;
-scene.add(coral2);
+// OrbitControls
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.maxPolarAngle = Math.PI * 0.495;
+controls.target.set(0, 1, 0);
+controls.minDistance = 10.0;
+controls.maxDistance = 40.0;
+controls.update();
 
-
-//Renderers the scene
-const animate = function () 
-{
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-};
+// Animation Loop
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
 
 animate();
