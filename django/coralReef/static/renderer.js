@@ -1,10 +1,15 @@
 // Import necessary components from Three.js
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
+console.log('Before importing Three.js modules');
+
+import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+import { OrbitControls } from 'https://unpkg.com/three/examples/jsm/controls/OrbitControls.js';
+import { PLYLoader } from 'https://unpkg.com/three/examples/jsm/loaders/PLYLoader.js';
+
+console.log('After importing Three.js modules');
 
 // Wait for the document to fully load to ensure all elements are accessible
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Document loaded');
     // Read the .ply file path from the data-ply-path attribute of the #modelPath element
     const modelPathElement = document.getElementById('modelPath');
     const plyFilePath = modelPathElement.getAttribute('data-ply-path');
@@ -38,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to load a .ply file and add it to the scene
     const loader = new PLYLoader();
     loader.load(plyFilePath, (geometry) => {
+        console.log('PLY file loaded');
         const material = new THREE.PointsMaterial({size: 0.1, vertexColors: true}); // Create a material for the points
         const mesh = new THREE.Points(geometry, material); // Create a mesh from the loaded geometry and material
         scene.add(mesh); // Add the mesh to the scene
