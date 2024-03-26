@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
     <link rel="stylesheet" href="{% static 'main.css' %}" />
-    <link rel="stylesheet" href="{% static 'upload.css' %}" />
+    <link rel="stylesheet" href="{% static 'renderer.css' %}" />
     <title>NeRF renderer</title>
 </head>
 <body>
@@ -23,5 +23,7 @@
         <button class="export-btn">Export Model</button>
     </div>
     <script type="module" src="{% static 'renderer.js' %}"></script>
+    <script type="module" src="{% static 'view.js' %}"></script>
+
 </body>
 </html>

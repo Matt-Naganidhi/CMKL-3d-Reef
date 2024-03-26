@@ -1,61 +1,53 @@
 // Import necessary components from Three.js
-console.log('Before importing Three.js modules');
+console.log('renderer.js is loaded and running');
 
-import * as THREE from 'https://unpkg.com/three/build/three.module.js';
-import { OrbitControls } from 'https://unpkg.com/three/examples/jsm/controls/OrbitControls.js';
-import { PLYLoader } from 'https://unpkg.com/three/examples/jsm/loaders/PLYLoader.js';
+import * as THREE from '/static/three/three.module.js';
+import { OrbitControls } from '/static/three/OrbitControls.js';
+import { PLYLoader } from '/static/three/PLYLoader.js';
 
 console.log('After importing Three.js modules');
 
-// Wait for the document to fully load to ensure all elements are accessible
+let scene, renderer, camera, controls; // Declare these variables outside so they can be accessed by loadPLY
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Document loaded');
-    // Read the .ply file path from the data-ply-path attribute of the #modelPath element
-    const modelPathElement = document.getElementById('modelPath');
-    const plyFilePath = modelPathElement.getAttribute('data-ply-path');
+    init(); // Call init to setup the scene, camera, renderer, and controls
+    // Start the animation loop
+    animate();
+});
 
-    // Select the canvas element and set its width and height
+function init() {
     const display = document.querySelector("#display");
     const width = display.getBoundingClientRect().width;
     const height = display.getBoundingClientRect().height;
 
-    // Initialize the WebGL renderer with the canvas
-    const renderer = new THREE.WebGLRenderer({canvas: display});
-    renderer.setPixelRatio(window.devicePixelRatio); // Set the pixel ratio to support high-resolution displays
-    renderer.setSize(width, height); // Set the renderer size to fill the canvas
+    renderer = new THREE.WebGLRenderer({canvas: display});
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(width, height);
 
-    // Create a new Three.js scene
-    const scene = new THREE.Scene();
+    scene = new THREE.Scene();
 
-    // Set up the camera with a perspective view
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    camera.position.setZ(5); // Position the camera to view the scene
+    camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    camera.position.setZ(5);
 
-    // Initialize camera controls for interactive movement in the scene
-    const controls = new OrbitControls(camera, renderer.domElement);
+    controls = new OrbitControls(camera, renderer.domElement);
+}
 
-    // Uncomment below if you need lighting in your scene
-    // const point_light = new THREE.PointLight(0xffffff, 1000);
-    // const ambient_light = new THREE.AmbientLight(0xffffff, 0.5);
-    // point_light.position.set(5, 5, 5);
-    // scene.add(point_light, ambient_light);
-
-    // Function to load a .ply file and add it to the scene
+// Exposed function to load a .ply file and add it to the scene
+export function loadPLY(plyFilePath) {
     const loader = new PLYLoader();
     loader.load(plyFilePath, (geometry) => {
         console.log('PLY file loaded');
-        const material = new THREE.PointsMaterial({size: 0.1, vertexColors: true}); // Create a material for the points
-        const mesh = new THREE.Points(geometry, material); // Create a mesh from the loaded geometry and material
+        const material = new THREE.PointsMaterial({size: 0.1, vertexColors: true});
+        const mesh = new THREE.Points(geometry, material);
         scene.add(mesh); // Add the mesh to the scene
+    }, undefined, function (error) {
+        console.error('Error loading PLY file:', error);
     });
+}
 
-    // Function to continuously update the scene and controls
-    function animate() {
-        requestAnimationFrame(animate); // Request the next frame for animation
-        controls.update(); // Update the controls based on user interaction
-        renderer.render(scene, camera); // Render the current state of the scene with the camera
-    }
-
-    // Start the animation loop
-    animate();
-});
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+}
