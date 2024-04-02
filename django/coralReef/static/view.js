@@ -21,9 +21,18 @@ function fetchMostRecentPlyFile() {
         })
         .then(data => {
             if (data.success) {
+                // fullPath is correctly scoped for access by the export button's event listener
                 const fullPath = `${window.location.origin}/${data.file_path}`;
                 console.log("Loading .ply file from:", fullPath);
                 loadPLY(fullPath); // Use the function from renderer.js to load the .ply file
+                
+                // Setup export button to use the fullPath
+                const exportBtn = document.getElementById('exportBtn');
+                exportBtn.addEventListener('click', function() {
+                    // Assuming fullPath is the full URL to the .ply file
+                    const filename = fullPath.split('/').pop(); // Extracts the filename from the URL
+                    downloadFile(fullPath, filename);
+                });
             } else {
                 console.error(data.error); // Log any errors from the server
             }
@@ -39,22 +48,11 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchMostRecentPlyFile();
 });
 
-/*
-The following async function 'getPLY' was considered for directly fetching .ply files from a specified endpoint.
-It demonstrates fetching a blob from an endpoint and converting it to a blob URL, but it's not used in the final implementation.
-This is left here for future reference or potential use.
-
-async function getPLY(endpoint) {
-    const res = await fetch(endpoint);
-    const blob = await res.blob();
-    const blobURL = URL.createObjectURL(blob);
-    // Further actions to use the blobURL could be implemented here
+function downloadFile(dataUrl, filename) {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
-*/
-
-// The following lines are part of the original setup for direct loading of a specific .ply file
-// const plyFilePath = '/static/models/skull.ply'; // This was an example path for directly loading a specific .ply file
-// loadPLY(plyFilePath); // This directly loads a .ply file based on the specified path
-
-// The line to test fetching a .ply file from a specific endpoint, now commented out
-// getPLY("http://localhost:3000/view"); // This was a test path for a previously considered method to load .ply files
