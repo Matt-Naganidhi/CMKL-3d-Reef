@@ -31,7 +31,8 @@ console.log("Controls initialized");
 export function loadPLY(filePath) {
     const loader = new PLYLoader();
     loader.load(filePath, (geometry) => {
-        const material = new THREE.PointsMaterial({ size: 0.1, vertexColors: true });
+       //const material = new THREE.PointsMaterial({ size: 0.1, vertexColors: true });
+        const material = new THREE.PointsMaterial({ size: 0.1, color: "0xFFFFFF" });
         const mesh = new THREE.Points(geometry, material);
         scene.add(mesh);
         console.log("PLY file loaded and added to scene");
