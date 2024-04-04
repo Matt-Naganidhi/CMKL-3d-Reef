@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/renderer.css" />
+    <script type="importmap">
+      {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+            "three/examples/jsm/controls/OrbitControls": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/controls/OrbitControls.js",
+            "three/examples/jsm/loaders/PLYLoader": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/PLYLoader.js"
+        }
+      }
+    </script>
+    <title>NeRF renderer</title>
+  </head>
+  <body>
+    <h1>3D CONSTRUCTION</h1>
+    <div class="subtitle">
+        <a href="upload.html">Upload Files</a> | <span>Model Preview</span>
+    </div>
+    <div class="centered-content">
+        <canvas id="display"></canvas>
+        <div class="buttons">
+            <button class="back-btn">Back</button>
+            <button class="export-btn">Export Model</button>
+        </div>
+    </div>
+    <script type="module" src="renderer.js"></script>
+    <script type="module" src="view.js"></script>
+</body>
+</html>

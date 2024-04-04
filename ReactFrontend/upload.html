@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Construction</title>
+    <link rel="stylesheet" href="src/css/main.css" />
+    <link rel="stylesheet" href="src/css/upload.css" />
+</head>
+<body>
+    <h1>3D CONSTRUCTION</h1>
+    <div class="subtitle">
+        <span>Upload Files</span> | <a href="view.html">Model Preview</a>
+    </div>
+    
+    <div class="functions">
+        <div class="upload-files">
+            <h2>Upload Files</h2>
+            <div id="drop-area">
+                Drag & Drop to upload files or 
+                <button type="button">Select to upload files</button>
+                <label class="hide"> 
+                    browse files 
+                    <input type="file" accept="image/*, video/*">
+                </label>
+            </div>
+            <button id="submit">upload</button>
+        </div>
+        <div id="preview"></div>
+    </div>
+    <script src="upload.js"></script>
+</body>
+</html>
