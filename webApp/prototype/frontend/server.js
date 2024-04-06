@@ -14,6 +14,6 @@ server.get("/", (req, res) => {
 });
 
 server.get("/view", (req, res) =>{
-    res.sendFile(path.join(__dirname, "goat_skull_ply_1", "Goat skull.ply"));
+    res.sendFile(path.join(__dirname, "point_cloud.ply"));
     res.on("error", err => console.log(err));
 });
