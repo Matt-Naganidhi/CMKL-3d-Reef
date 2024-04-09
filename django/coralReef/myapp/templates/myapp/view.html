@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
@@ -9,28 +9,26 @@
     <script type="importmap">
       {
         "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
-            "three/examples/jsm/controls/OrbitControls": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/controls/OrbitControls.js",
-            "three/examples/jsm/loaders/PLYLoader": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/PLYLoader.js"
+            "gsplat": "https://cdn.jsdelivr.net/npm/gsplat@1.2.3"
+            
         }
       }
     </script>
     <title>NeRF renderer</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>3D CONSTRUCTION</h1>
     <div class="subtitle">
         <a href="{% url 'upload_file' %}">Upload Files</a> | <span>Model Preview</span>
     </div>
     <div class="centered-content">
         <canvas id="display"></canvas>
-    </div>
-    <div class="buttons">
-        <button class="back-btn" onclick="history.back()">Back</button>
-        <button class="export-btn" id="exportBtn">Export Model</button>
+        <div class="buttons">
+            <button class="back-btn" onclick="history.back()">Back</button>
+            <button id="export-btn">Export Model</button>
+        </div>
     </div>
     <script type="module" src="{% static 'renderer.js' %}"></script>
     <script type="module" src="{% static 'view.js' %}"></script>
-
 </body>
 </html>
