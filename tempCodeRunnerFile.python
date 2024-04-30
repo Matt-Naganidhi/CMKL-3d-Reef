@@ -1,0 +1,83 @@
+# Import necessary libraries
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES
+from Crypto.Hash import SHA256
+from Crypto.Signature import pkcs1_15
+from Crypto.Random import get_random_bytes
+import base64
+
+# Function to generate RSA keys
+def generate_rsa_keys():
+    key = RSA.generate(2048)
+    private_key = key.export_key()
+    public_key = key.publickey().export_key()
+    return private_key, public_key
+
+# Function to encrypt data using AES
+def aes_encrypt(data, key):
+    cipher = AES.new(key, AES.MODE_EAX)
+    nonce = cipher.nonce
+    ciphertext, tag = cipher.encrypt_and_digest(data.encode('utf-8'))
+    return base64.b64encode(ciphertext), base64.b64encode(nonce), base64.b64encode(tag)
+
+# Function to decrypt data using AES
+def aes_decrypt(ciphertext, nonce, tag, key):
+    cipher = AES.new(key, AES.MODE_EAX, nonce=base64.b64decode(nonce))
+    decrypted_data = cipher.decrypt(base64.b64decode(ciphertext))
+    try:
+        cipher.verify(base64.b64decode(tag))
+        return decrypted_data.decode('utf-8')
+    except ValueError:
+        return "Key incorrect or message corrupted"
+
+# Function to generate a hash of data using SHA-256
+def hash_data(data):
+    hash_func = SHA256.new(data.encode('utf-8'))
+    return hash_func
+
+# Function to create a digital signature using RSA
+def sign_data(hash_data, private_key):
+    signer = pkcs1_15.new(RSA.import_key(private_key))
+    signature = signer.sign(hash_data)
+    return base64.b64encode(signature)
+
+# Function to verify a digital signature using RSA
+def verify_signature(hash_data, signature, public_key):
+    verifier = pkcs1_15.new(RSA.import_key(public_key))
+    try:
+        verifier.verify(hash_data, base64.b64decode(signature))
+        return "The signature is valid."
+    except (ValueError, TypeError):
+        return "The signature is invalid."
+
+# Main execution
+if __name__ == '__main__':
+    # Generate RSA keys
+    priv_key, pub_key = generate_rsa_keys()
+    
+    # Define data and AES key
+    original_data = 'Sensitive game preferences'
+    aes_key = get_random_bytes(16)  # AES key must be either 16, 24, or 32 bytes long
+
+    # Encrypt data using AES
+    encrypted_data, nonce, tag = aes_encrypt(original_data, aes_key)
+    
+    # Decrypt data using AES
+    decrypted_data = aes_decrypt(encrypted_data, nonce, tag, aes_key)
+    
+    # Hash the data
+    hashed_data = hash_data(original_data)
+    
+    # Sign the hashed data using RSA
+    signature = sign_data(hashed_data, priv_key)
+    
+    # Verify the digital signature using RSA
+    verification_result = verify_signature(hashed_data, signature, pub_key)
+
+    # Print results
+    print(f"Original Data: {original_data}")
+    print(f"Encrypted Data (Base64 Encoded): {encrypted_data.decode()}")
+    print(f"Decrypted Data: {decrypted_data}")
+    print(f"Hashed Data (Hex): {hashed_data.hexdigest()}")
+    print(f"Digital Signature (Base64 Encoded): {signature.decode()}")
+    print(f"Signature Verification Result: {verification_result}")

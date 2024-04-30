@@ -1,13 +1,17 @@
-
 .upload-files {
     background-color: #fff; 
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
 }
 
 .upload-files h2 {
     margin-top: 0;
+}
+
+.upload-files button {
+    margin-top: 15px;  /* Increased from initial or add this line if it's not explicitly set */
 }
 
 .application-info {

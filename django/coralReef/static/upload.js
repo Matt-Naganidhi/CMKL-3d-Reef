@@ -1,4 +1,54 @@
 
+//version2
+const preview = document.querySelector("#preview");
+const dropArea = document.querySelector("#drop-area");
+const selectButton = dropArea.querySelector("button");
+const uploadButton = document.querySelector("#submit");
+const input = dropArea.querySelector("input");
+
+// Handle file selection and update the preview
+function updatePreview(files) {
+    preview.innerHTML = ""; // Clear existing content
+
+    Array.from(files).forEach(file => {
+        const fileElement = file.type.startsWith("image/") ? document.createElement("img") : document.createElement("video");
+        fileElement.src = URL.createObjectURL(file);
+        fileElement.onload = () => URL.revokeObjectURL(fileElement.src); // Free up memory
+        if (fileElement.tagName === "VIDEO") fileElement.controls = true;
+        preview.appendChild(fileElement);
+    });
+}
+
+//Make sure the file input is only triggered once when the select button is clicked
+selectButton.onclick = (event) => {
+    input.click();
+    event.preventDefault(); // Prevent any default action
+};
+
+input.addEventListener("change", (event) => {
+    if (event.target.files.length > 0) {
+        updatePreview(event.target.files);
+    }
+});
+
+uploadButton.addEventListener("click", () => {
+    if (input.files.length === 0) {
+        console.log("No file selected to upload.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", input.files[0]); // Ensure the key matches your server's expected field for file upload
+
+    fetch('https://httpbin.org/post', { method: "POST", body: formData })
+        .then(response => response.json())
+        .then(data => console.log("Upload successful:", data))
+        .catch(error => console.log("Upload error:", error));
+});
+
+
+/* 
+version 1
 const preview = document.querySelector("#preview");
 const dropArea = document.querySelector("#drop-area");
 const selectButton = dropArea.querySelector("button");
@@ -45,3 +95,4 @@ input.addEventListener("change", e =>
         }
     });
 });
+*/

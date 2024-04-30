@@ -5,6 +5,7 @@ import os
 from .models import TrainingJob
 import uuid
 from datetime import datetime
+import shutil
 
 def generate_job_id():
     # Generates a unique identifier using UUID
@@ -65,7 +66,6 @@ def model_preview(request):
     return render(request, 'myapp/view.html', context)
 
 def get_most_recent_ply(request):
-    # Finds the most recent .ply file and returns its path
     models_dir = os.path.join(settings.BASE_DIR, 'static', 'models')
     try:
         ply_files = [f for f in os.listdir(models_dir) if f.endswith('.ply')]
@@ -73,21 +73,27 @@ def get_most_recent_ply(request):
             raise FileNotFoundError("No .ply files found.")
         
         most_recent_file = max(ply_files, key=lambda f: os.path.getmtime(os.path.join(models_dir, f)))
-        most_recent_file_path = os.path.join('static', 'models', most_recent_file) 
+        most_recent_file_path = os.path.join('static', 'models', most_recent_file)
+        response_data = {'success': True, 'file_path': most_recent_file_path}
+
+        # Update the database to mark the job as rendered
+        job = TrainingJob.objects.filter(file_path=most_recent_file).first()
+        if job:
+            job.rendered = True
+            job.save()
         
-        response_data = {
-            'success': True,
-            'file_path': most_recent_file_path,
-        }
     except FileNotFoundError as e:
-        response_data = {
-            'success': False,
-            'error': str(e),
-        }
+        response_data = {'success': False, 'error': str(e)}
     except Exception as e:
-        response_data = {
-            'success': False,
-            'error': "An error occurred while fetching the .ply file.",
-        }
-    
+        response_data = {'success': False, 'error': "An error occurred while fetching the .ply file."}
+
     return JsonResponse(response_data)
+
+# Simulate the flow
+def simulate_processing(request):
+    job = TrainingJob.objects.latest('timestamp')
+    job.success_status = 'completed'
+    job.save()
+    return JsonResponse({'message': 'Processing simulated successfully'})
+
+
