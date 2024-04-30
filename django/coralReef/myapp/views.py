@@ -5,6 +5,7 @@ import os
 from .models import TrainingJob
 import uuid
 from datetime import datetime
+import subprocess
 
 def generate_job_id():
     # Generates a unique identifier using UUID
@@ -91,3 +92,49 @@ def get_most_recent_ply(request):
         }
     
     return JsonResponse(response_data)
+
+def activate_env_and_run_command(request, job_id):
+    upload_file()
+    training_job = TrainingJob.objects.get(job_id=job_id)
+    print(training_job)
+    
+    # Set the name of the Anaconda environment you want to activate
+    env_name = "gaussian-splatting"
+    video_name = training_job
+    
+    # Set the drive and directory you want to change to
+    target_drive = "B:"
+    target_directory = r"B:\\Pinokio\\api\\gaussian-splatting-Windows.git"
+    django_directory = training_job.file_path
+    input_directory = r"B:\\Pinokio\\api\\gaussian-splatting-Windows.git\\input_data"
+    folder_name = {video_name}.split('.')[0]
+    
+    # Set the command you want to execute
+    activate_conda_command = f"conda activate gaussian-splatting"
+    ffmpeg_command = f'ffmpeg -i {django_directory}\\{video_name} -vf "fps=20" {input_directory}\\{folder_name}\\input\\output%04d.png'
+    colmap_command = f"python convert.py -s {input_directory}\\{folder_name}"
+    gaussian_splatting_command = f"conda run -n {env_name} python train.py -s {input_directory}\\{folder_name}"
+    
+    try:
+        # Change the drive
+        change_drive_cmd = f"{target_drive}"
+        os.system(change_drive_cmd)
+        
+        # Change the directory
+        change_dir_cmd = f"cd {target_directory}"
+        os.chdir(target_directory)
+        print(f"{ffmpeg_command} && {colmap_command} && {gaussian_splatting_command}")
+        # Execute the commands
+        os.system(activate_conda_command)
+        print(activate_conda_command)
+        os.system(f"{ffmpeg_command} && {colmap_command}")
+        start_training()
+        os.system(gaussian_splatting_command)
+        finish_training()
+        get_most_recent_ply()
+        
+    except Exception as e:
+        # Handle any exceptions that occurred during the process
+        error_message = str(e)
+        print("An error occurred: " + error_message)
+    return render('B:\Pinokio\api\gaussian-splatting-Windows.git\output\11cda6ee-5\point_cloud\iteration_30000')
